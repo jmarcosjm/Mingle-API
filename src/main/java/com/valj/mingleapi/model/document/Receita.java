@@ -22,4 +22,5 @@ public class Receita {
     @NonNull
     private List<String> preparo;
     private String _idCriador;
+    private String imagem;
 }
