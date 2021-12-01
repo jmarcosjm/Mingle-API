@@ -1,13 +1,12 @@
 package com.valj.mingleapi.service;
 
-import com.valj.mingleapi.model.document.Ingrediente;
 import com.valj.mingleapi.model.document.Receita;
 import com.valj.mingleapi.repository.ReceitaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -18,7 +17,15 @@ public class ReceitaService {
         return repository.findAll();
     }
 
-    public void adicionar(Receita receita){repository.insert(receita);}
+    public void adicionar(Receita receita) {
+        repository.insert(receita);
+    }
 
-    public Receita getById(String _idReceita){return repository.getReceitaBy_id(_idReceita);}
+    public Optional<Receita> getById(String _id) {
+        return repository.findById(_id);
+    }
+
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 }

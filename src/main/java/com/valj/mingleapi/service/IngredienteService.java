@@ -13,17 +13,27 @@ import java.util.Optional;
 public class IngredienteService {
     private IngredienteRepository repository;
 
-    public Optional<Ingrediente> findByNome(String nome){
-     return repository.findIngredienteByNome(nome);
+    public Optional<Ingrediente> getById(String _id) {
+        return repository.findById(_id);
     }
 
-    public List<Ingrediente> getAll(){return repository.findAll();}
+    public Optional<Ingrediente> findByNome(String nome) {
+        return repository.findIngredienteByNome(nome);
+    }
 
-    public Ingrediente adicionar(Ingrediente ingrediente){
+    public List<Ingrediente> getAll() {
+        return repository.findAll();
+    }
+
+    public Ingrediente adicionar(Ingrediente ingrediente) {
         return repository.insert(ingrediente);
     }
 
-    public List<Ingrediente> adicionarVarios(List<Ingrediente> ingredientes){
+    public List<Ingrediente> adicionarVarios(List<Ingrediente> ingredientes) {
         return repository.insert(ingredientes);
+    }
+
+    public void deleteAll() {
+        repository.deleteAll();
     }
 }

@@ -14,23 +14,23 @@ public class UsuarioService {
 
     UsuarioRepository repository;
 
-    public boolean verificarExistenciaEmail(String email){
-        return repository.findByEmail(email).isPresent();
+    public boolean verificarExistenciaEmail(String email) {
+        return encontraPorEmail(email).isPresent();
     }
 
-    public boolean verificarExistenciaUsuario(String username){
+    public boolean verificarExistenciaUsuario(String username) {
         return repository.findByUsername(username).isPresent();
     }
 
-    public Optional<Usuario> econtraPorEmail(String email){
+    public Optional<Usuario> encontraPorEmail(String email) {
         return repository.findByEmail(email);
     }
 
-    public void adicionar(Usuario usuario){
+    public void adicionar(Usuario usuario) {
         repository.insert(usuario);
     }
 
-    public List<Usuario> getAll(){
+    public List<Usuario> getAll() {
         return repository.findAll();
     }
 }
