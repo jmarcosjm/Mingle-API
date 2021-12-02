@@ -17,4 +17,7 @@ public class IngredienteCadastradoService {
     public List<IngredienteCadastrado> getAll(String idUsuario){
         return repository.findAllByIdUsuario(idUsuario);
     }
+    public IngredienteCadastrado getByIdUsuarioReceita(String idReceita, String idUsuario){
+        return repository.findBy_idAndiAndIdUsuario(idReceita, idUsuario);
+    }
 }
