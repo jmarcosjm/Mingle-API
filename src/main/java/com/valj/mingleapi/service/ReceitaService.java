@@ -1,5 +1,6 @@
 package com.valj.mingleapi.service;
 
+import com.valj.mingleapi.model.document.Ingrediente;
 import com.valj.mingleapi.model.document.Receita;
 import com.valj.mingleapi.repository.ReceitaRepository;
 import lombok.AllArgsConstructor;
@@ -27,5 +28,13 @@ public class ReceitaService {
 
     public void deleteAll() {
         repository.deleteAll();
+    }
+
+    public List<Receita> getReceitaByIngrediente(Ingrediente ingrediente){
+        return repository.findDistinctAllByIngredientesUtilizados_Ingrediente__id(ingrediente.get_id());
+    }
+
+    public List<Receita> getReceitasByIngredientes(List<String> ids){
+        return repository.findDistinctAllByIngredientesUtilizados_Ingrediente__idIn(ids);
     }
 }

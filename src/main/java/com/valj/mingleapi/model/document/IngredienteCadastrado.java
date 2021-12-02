@@ -1,26 +1,22 @@
 package com.valj.mingleapi.model.document;
 
-import com.mongodb.lang.NonNull;
 import com.valj.mingleapi.model.IngredienteUtilizado;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NonNull;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
-
-@Document(collection = "receitas")
-@Data
+@Document
 @AllArgsConstructor
-public class Receita {
+@Data
+public class IngredienteCadastrado {
     @Id
     private String _id;
     @NonNull
-    private String nome;
+    private String idUsuario;
     @NonNull
-    private List<IngredienteUtilizado> ingredientesUtilizados;
-    @NonNull
-    private List<String> preparo;
-    private String _idCriador;
-    private String imagem;
+    @Indexed(unique = true)
+    private IngredienteUtilizado ingredienteUtilizado;
 }
