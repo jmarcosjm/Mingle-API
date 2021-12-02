@@ -85,9 +85,8 @@ public class ReceitaRest {
 //    }
 
     @GetMapping(path = "/receitas-ingrediente-cadastrado")
-    ResponseEntity<List<Receita>> getReceitasPorIngredienteCadastrado(@RequestHeader String idUsuario,
-                                                                      @RequestHeader String idIngredienteCadastrado){
-        IngredienteCadastrado ingredienteCadastrado = ingredienteCadastradoService.getByIdUsuarioReceita(idUsuario,idIngredienteCadastrado);
+    ResponseEntity<List<Receita>> getReceitasPorIngredienteCadastrado(@RequestHeader String idIngredienteCadastrado){
+        IngredienteCadastrado ingredienteCadastrado = ingredienteCadastradoService.getByIdUsuarioReceita(idIngredienteCadastrado);
         return ResponseEntity.ok(service.getReceitaByIngrediente(ingredienteCadastrado.getIngredienteUtilizado().getIngrediente()));
     }
 

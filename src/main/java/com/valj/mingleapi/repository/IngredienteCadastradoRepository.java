@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface IngredienteCadastradoRepository extends MongoRepository<IngredienteCadastrado, String> {
     List<IngredienteCadastrado> findAllByIdUsuario(String idUsuario);
-    IngredienteCadastrado findBy_idAndIdUsuario(String _id, String idUsuario);
+    IngredienteCadastrado findBy_id(String _id);
 }
