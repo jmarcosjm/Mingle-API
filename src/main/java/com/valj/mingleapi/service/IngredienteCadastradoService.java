@@ -18,6 +18,6 @@ public class IngredienteCadastradoService {
         return repository.findAllByIdUsuario(idUsuario);
     }
     public IngredienteCadastrado getByIdUsuarioReceita(String idReceita, String idUsuario){
-        return repository.findBy_idAndiAndIdUsuario(idReceita, idUsuario);
+        return repository.findBy_idAndIdUsuario(idReceita, idUsuario);
     }
 }
