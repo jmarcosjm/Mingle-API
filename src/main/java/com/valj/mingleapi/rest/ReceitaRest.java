@@ -1,5 +1,7 @@
 package com.valj.mingleapi.rest;
 
+import com.valj.mingleapi.model.IngredienteUtilizado;
+import com.valj.mingleapi.model.ReceitaResponse;
 import com.valj.mingleapi.model.document.Ingrediente;
 import com.valj.mingleapi.model.document.IngredienteCadastrado;
 import com.valj.mingleapi.model.document.Receita;
@@ -91,11 +93,15 @@ public class ReceitaRest {
     }
 
     @GetMapping(path = "/receitas-todos-ingrediente-cadastrado")
-    ResponseEntity<List<Receita>> getReceitasPorIngredientesCadastrados(@RequestHeader String idUsuario){
-        List<String> ids = ingredienteCadastradoService.getAll(idUsuario).stream()
-                .map(ingredienteCadastrado -> ingredienteCadastrado.getIngredienteUtilizado().getIngrediente().get_id())
+    ResponseEntity<List<ReceitaResponse>> getReceitasPorIngredientesCadastrados(@RequestHeader String idUsuario){
+//        List<String> ids = ingredienteCadastradoService.getAll(idUsuario).stream()
+//                .map(ingredienteCadastrado -> ingredienteCadastrado.getIngredienteUtilizado().getIngrediente().get_id())
+//                .collect(Collectors.toList());
+
+        List<IngredienteUtilizado> ingredientesUtilizados = ingredienteCadastradoService.getAll(idUsuario).stream()
+                .map(IngredienteCadastrado::getIngredienteUtilizado)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(service.getReceitasByIngredientes(ids));
+        return ResponseEntity.ok(service.getReceitasByIngredientes(ingredientesUtilizados));
     }
 
     @DeleteMapping
