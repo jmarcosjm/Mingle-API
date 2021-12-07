@@ -6,6 +6,10 @@ import lombok.Data;
 @Data
 public class IngredienteUtilizado {
     private Ingrediente ingrediente;
-    private int quantidade;
+    private double quantidade;
     private String unidade;
+
+    public String getIngredienteId(){
+        return getIngrediente().get_id();
+    }
 }

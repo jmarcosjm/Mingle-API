@@ -11,10 +11,5 @@ import java.util.List;
 @Repository
 public interface ReceitaRepository extends MongoRepository<Receita, String> {
     Receita getReceitaBy_id(String _id);
-
-    //List<Receita> findDistinctAllByIngredientesUtilizados_Ingrediente__idIn(List<String> ids);
-
-    List<Receita> findDistinctAllByIngredientesUtilizados_Ingrediente__idIn(List<String> ids);
-
-    List<Receita> findDistinctAllByIngredientesUtilizados_Ingrediente__id(String _id);
+    List<Receita> findAllByIngredientesUtilizados_Ingrediente__id(String _id);
 }

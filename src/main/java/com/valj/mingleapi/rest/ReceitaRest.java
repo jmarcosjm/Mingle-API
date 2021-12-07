@@ -87,21 +87,20 @@ public class ReceitaRest {
 //    }
 
     @GetMapping(path = "/receitas-ingrediente-cadastrado")
-    ResponseEntity<List<Receita>> getReceitasPorIngredienteCadastrado(@RequestHeader String idIngredienteCadastrado){
+    ResponseEntity<List<ReceitaResponse>> getReceitasPorIngredienteCadastrado(@RequestHeader String idIngredienteCadastrado, @RequestHeader String idUsuario){
         IngredienteCadastrado ingredienteCadastrado = ingredienteCadastradoService.getByIdUsuarioReceita(idIngredienteCadastrado);
-        return ResponseEntity.ok(service.getReceitaByIngrediente(ingredienteCadastrado.getIngredienteUtilizado().getIngrediente()));
+        List<IngredienteUtilizado> ingredientesUsuario = ingredienteCadastradoService.getAll(idUsuario).stream()
+                .map(IngredienteCadastrado::getIngredienteUtilizado)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(service.getReceitaByIngrediente(ingredienteCadastrado.getIngredienteUtilizado(), ingredientesUsuario));
     }
 
     @GetMapping(path = "/receitas-todos-ingrediente-cadastrado")
     ResponseEntity<List<ReceitaResponse>> getReceitasPorIngredientesCadastrados(@RequestHeader String idUsuario){
-//        List<String> ids = ingredienteCadastradoService.getAll(idUsuario).stream()
-//                .map(ingredienteCadastrado -> ingredienteCadastrado.getIngredienteUtilizado().getIngrediente().get_id())
-//                .collect(Collectors.toList());
-
-        List<IngredienteUtilizado> ingredientesUtilizados = ingredienteCadastradoService.getAll(idUsuario).stream()
+        List<IngredienteUtilizado> ingredientesUsuario = ingredienteCadastradoService.getAll(idUsuario).stream()
                 .map(IngredienteCadastrado::getIngredienteUtilizado)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(service.getReceitasByIngredientes(ingredientesUtilizados));
+        return ResponseEntity.ok(service.getReceitasByIngredientes(ingredientesUsuario));
     }
 
     @DeleteMapping
