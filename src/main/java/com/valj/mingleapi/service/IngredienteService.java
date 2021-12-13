@@ -18,7 +18,11 @@ public class IngredienteService {
     }
 
     public Optional<Ingrediente> findByNome(String nome) {
-        return repository.findIngredienteByNome(nome);
+        return repository.findIngredienteByNomeIgnoreCase(nome);
+    }
+
+    public List<Ingrediente> findAllByNome(String nome) {
+        return repository.findByNomeContainingIgnoreCase(nome);
     }
 
     public List<Ingrediente> getAll() {

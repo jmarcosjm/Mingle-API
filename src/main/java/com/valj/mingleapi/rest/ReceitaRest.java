@@ -2,7 +2,6 @@ package com.valj.mingleapi.rest;
 
 import com.valj.mingleapi.model.IngredienteUtilizado;
 import com.valj.mingleapi.model.ReceitaResponse;
-import com.valj.mingleapi.model.document.Ingrediente;
 import com.valj.mingleapi.model.document.IngredienteCadastrado;
 import com.valj.mingleapi.model.document.Receita;
 import com.valj.mingleapi.model.document.ReceitaSalva;
@@ -13,7 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,9 +44,9 @@ public class ReceitaRest {
         return ResponseEntity.ok(receita);
     }
 
-    @GetMapping(path = "/salvas")
-    public ResponseEntity<List<Receita>> getAllReceitasSalvas(@RequestHeader String _idUsuario) {
-        List<ReceitaSalva> receitasSalvas = receitaSalvaService.encontrarTodosPorIdUsuario(_idUsuario);
+    @GetMapping(path = "/salvas/{idUsuario}")
+    public ResponseEntity<List<Receita>> getAllReceitasSalvas(@PathVariable("idUsuario") String idUsuario) {
+        List<ReceitaSalva> receitasSalvas = receitaSalvaService.encontrarTodosPorIdUsuario(idUsuario);
         List<Receita> receitas = receitasSalvas.stream()
                 .map(receitaSalva -> service.getById(receitaSalva.getIdUsuarioReceita().get_idReceita()).orElse(null))
                 .collect(Collectors.toList());
@@ -86,8 +85,8 @@ public class ReceitaRest {
 //        return ResponseEntity.ok(retorno);
 //    }
 
-    @GetMapping(path = "/receitas-ingrediente-cadastrado")
-    ResponseEntity<List<ReceitaResponse>> getReceitasPorIngredienteCadastrado(@RequestHeader String idIngredienteCadastrado, @RequestHeader String idUsuario){
+    @GetMapping(path = "/ingrediente-cadastrado")
+    ResponseEntity<List<ReceitaResponse>> getReceitasPorIngredienteCadastrado(@RequestHeader String idIngredienteCadastrado, @RequestHeader String idUsuario) {
         IngredienteCadastrado ingredienteCadastrado = ingredienteCadastradoService.getByIdUsuarioReceita(idIngredienteCadastrado);
         List<IngredienteUtilizado> ingredientesUsuario = ingredienteCadastradoService.getAll(idUsuario).stream()
                 .map(IngredienteCadastrado::getIngredienteUtilizado)
@@ -95,8 +94,8 @@ public class ReceitaRest {
         return ResponseEntity.ok(service.getReceitaByIngrediente(ingredienteCadastrado.getIngredienteUtilizado(), ingredientesUsuario));
     }
 
-    @GetMapping(path = "/receitas-todos-ingrediente-cadastrado")
-    ResponseEntity<List<ReceitaResponse>> getReceitasPorIngredientesCadastrados(@RequestHeader String idUsuario){
+    @GetMapping(path = "/ingredientes-cadastrados/{idUsuario}")
+    ResponseEntity<List<ReceitaResponse>> getReceitasPorIngredientesCadastrados(@PathVariable(value = "idUsuario") String idUsuario) {
         List<IngredienteUtilizado> ingredientesUsuario = ingredienteCadastradoService.getAll(idUsuario).stream()
                 .map(IngredienteCadastrado::getIngredienteUtilizado)
                 .collect(Collectors.toList());

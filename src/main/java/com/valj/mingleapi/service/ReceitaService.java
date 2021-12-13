@@ -2,14 +2,9 @@ package com.valj.mingleapi.service;
 
 import com.valj.mingleapi.model.IngredienteUtilizado;
 import com.valj.mingleapi.model.ReceitaResponse;
-import com.valj.mingleapi.model.document.Ingrediente;
-import com.valj.mingleapi.model.document.IngredienteCadastrado;
 import com.valj.mingleapi.model.document.Receita;
 import com.valj.mingleapi.repository.ReceitaRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -39,7 +34,7 @@ public class ReceitaService {
         repository.deleteAll();
     }
 
-    public List<ReceitaResponse> getReceitaByIngrediente(IngredienteUtilizado ingredienteBusca, List<IngredienteUtilizado> ingredientesUsuario){
+    public List<ReceitaResponse> getReceitaByIngrediente(IngredienteUtilizado ingredienteBusca, List<IngredienteUtilizado> ingredientesUsuario) {
         List<Receita> retorno = new ArrayList<>(repository.findAllByIngredientesUtilizados_Ingrediente__id(ingredienteBusca.getIngrediente().get_id()));
         return retorno.stream()
                 .distinct()
@@ -48,7 +43,7 @@ public class ReceitaService {
     }
 
 
-    public List<ReceitaResponse> getReceitasByIngredientes(List<IngredienteUtilizado> ingredientesUsuario){
+    public List<ReceitaResponse> getReceitasByIngredientes(List<IngredienteUtilizado> ingredientesUsuario) {
         List<Receita> retorno = new ArrayList<>();
 
         ingredientesUsuario.forEach(ingredienteUtilizado -> retorno.addAll(repository.findAllByIngredientesUtilizados_Ingrediente__id(ingredienteUtilizado.getIngrediente().get_id())));
