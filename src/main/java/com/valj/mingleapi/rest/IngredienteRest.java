@@ -18,7 +18,9 @@ public class IngredienteRest {
     private IngredienteService service;
 
     @GetMapping
-    public ResponseEntity<List<Ingrediente>> getAll() {
+    public ResponseEntity<List<Ingrediente>> getAll(@RequestParam(required = false) String nome) {
+        if (nome != null) return ResponseEntity.ok(service.findAllByNome(nome));
+
         return ResponseEntity.ok(service.getAll());
     }
 
