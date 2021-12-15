@@ -45,4 +45,10 @@ public class IngredienteCadastradoRest {
     public ResponseEntity<List<IngredienteCadastrado>> getAll(@PathVariable("idUsuario") String idUsuario) {
         return ResponseEntity.ok(service.getAll(idUsuario));
     }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAll() {
+        service.deleteAll();
+        return ResponseEntity.ok().build();
+    }
 }
