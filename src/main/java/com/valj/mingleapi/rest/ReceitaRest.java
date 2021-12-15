@@ -1,11 +1,11 @@
 package com.valj.mingleapi.rest;
 
 import com.valj.mingleapi.model.IngredienteUtilizado;
-import com.valj.mingleapi.model.ReceitaResponse;
 import com.valj.mingleapi.model.document.IngredienteCadastrado;
 import com.valj.mingleapi.model.document.Receita;
 import com.valj.mingleapi.model.document.ReceitaSalva;
 import com.valj.mingleapi.service.IngredienteCadastradoService;
+import com.valj.mingleapi.service.IngredienteService;
 import com.valj.mingleapi.service.ReceitaSalvaService;
 import com.valj.mingleapi.service.ReceitaService;
 import lombok.AllArgsConstructor;
@@ -24,11 +24,20 @@ public class ReceitaRest {
     private ReceitaService service;
     private ReceitaSalvaService receitaSalvaService;
     private IngredienteCadastradoService ingredienteCadastradoService;
+    private IngredienteService ingredienteService;
 
 
     @GetMapping
-    public ResponseEntity<List<Receita>> getAll() {
-        return ResponseEntity.ok(service.getAll());
+    public ResponseEntity<List<Receita>> getAll(@RequestParam(required = false) String user, @RequestParam(required = false) String nome, @RequestBody(required = false) List<IngredienteUtilizado> ingredientes) {
+        if (user == null) {
+            if(nome != null) return ResponseEntity.ok(service.getAllByNome(nome));
+
+            if(ingredientes == null) return ResponseEntity.ok(service.getAll());
+
+            return ResponseEntity.ok(service.getReceitasByIngredientes(ingredientes));
+        }
+
+        return ResponseEntity.ok(service.encontrarTodosPorIdUsuario(user));
     }
 
     @GetMapping(value = "/{_id}")
@@ -40,6 +49,20 @@ public class ReceitaRest {
 
     @PostMapping
     public ResponseEntity<Receita> adicionar(@RequestBody Receita receita) {
+        receita.getIngredientesUtilizados().forEach(ingredienteUtilizado -> {
+            var ingrediente = ingredienteUtilizado.getIngrediente();
+
+            if (ingredienteService.findByNome(ingrediente.getNome()).isEmpty()) {
+                ingrediente.setNome(ingrediente.getNome().toUpperCase());
+                ingredienteUtilizado.setIngrediente(ingredienteService.adicionar(ingrediente));
+            } else {
+                ingredienteUtilizado
+                        .setIngrediente(ingredienteService
+                                .findByNome(ingrediente.getNome())
+                                .orElse(ingrediente));
+            }
+        });
+
         service.adicionar(receita);
         return ResponseEntity.ok(receita);
     }
@@ -75,27 +98,14 @@ public class ReceitaRest {
         return ResponseEntity.ok(resposta);
     }
 
-//    @GetMapping(path = "/receitas-ingrediente-cadastrado")
-//    ResponseEntity<List<Receita>> getReceitasPorIngredienteCadastrado(@RequestHeader String idUsuario){
-//        List<Receita> retorno = new ArrayList<>();
-//        List<Ingrediente> ingredientes = ingredienteCadastradoService.getAll(idUsuario).stream()
-//                .map(ingredienteCadastrado -> ingredienteCadastrado.getIngredienteUtilizado().getIngrediente())
-//                .collect(Collectors.toList());
-//        ingredientes.forEach(ingrediente -> retorno.addAll(service.getReceitaByIngrediente(ingrediente)));
-//        return ResponseEntity.ok(retorno);
-//    }
-
     @GetMapping(path = "/ingrediente-cadastrado")
-    ResponseEntity<List<ReceitaResponse>> getReceitasPorIngredienteCadastrado(@RequestHeader String idIngredienteCadastrado, @RequestHeader String idUsuario) {
+    ResponseEntity<List<Receita>> getReceitasPorIngredienteCadastrado(@RequestHeader String idIngredienteCadastrado) {
         IngredienteCadastrado ingredienteCadastrado = ingredienteCadastradoService.getByIdUsuarioReceita(idIngredienteCadastrado);
-        List<IngredienteUtilizado> ingredientesUsuario = ingredienteCadastradoService.getAll(idUsuario).stream()
-                .map(IngredienteCadastrado::getIngredienteUtilizado)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(service.getReceitaByIngrediente(ingredienteCadastrado.getIngredienteUtilizado(), ingredientesUsuario));
+        return ResponseEntity.ok(service.getReceitaByIngrediente(ingredienteCadastrado.getIngredienteUtilizado()));
     }
 
     @GetMapping(path = "/ingredientes-cadastrados/{idUsuario}")
-    ResponseEntity<List<ReceitaResponse>> getReceitasPorIngredientesCadastrados(@PathVariable(value = "idUsuario") String idUsuario) {
+    ResponseEntity<List<Receita>> getReceitasPorIngredientesCadastrados(@PathVariable(value = "idUsuario") String idUsuario) {
         List<IngredienteUtilizado> ingredientesUsuario = ingredienteCadastradoService.getAll(idUsuario).stream()
                 .map(IngredienteCadastrado::getIngredienteUtilizado)
                 .collect(Collectors.toList());

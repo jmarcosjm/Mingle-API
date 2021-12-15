@@ -1,7 +1,6 @@
 package com.valj.mingleapi.service;
 
 import com.valj.mingleapi.model.IngredienteUtilizado;
-import com.valj.mingleapi.model.ReceitaResponse;
 import com.valj.mingleapi.model.document.Receita;
 import com.valj.mingleapi.repository.ReceitaRepository;
 import lombok.AllArgsConstructor;
@@ -22,6 +21,10 @@ public class ReceitaService {
         return repository.findAll();
     }
 
+    public List<Receita> getAllByNome(String nome) {
+        return repository.findByNomeContainingIgnoreCase(nome);
+    }
+
     public void adicionar(Receita receita) {
         repository.insert(receita);
     }
@@ -34,22 +37,22 @@ public class ReceitaService {
         repository.deleteAll();
     }
 
-    public List<ReceitaResponse> getReceitaByIngrediente(IngredienteUtilizado ingredienteBusca, List<IngredienteUtilizado> ingredientesUsuario) {
+    public List<Receita> encontrarTodosPorIdUsuario(String idUsuario) {
+        return repository.findAllBy_idCriador(idUsuario);
+    }
+
+    public List<Receita> getReceitaByIngrediente(IngredienteUtilizado ingredienteBusca) {
         List<Receita> retorno = new ArrayList<>(repository.findAllByIngredientesUtilizados_Ingrediente__id(ingredienteBusca.getIngrediente().get_id()));
         return retorno.stream()
                 .distinct()
-                .map(receita -> new ReceitaResponse(receita, ingredientesUsuario))
                 .collect(Collectors.toList());
     }
 
-
-    public List<ReceitaResponse> getReceitasByIngredientes(List<IngredienteUtilizado> ingredientesUsuario) {
+    public List<Receita> getReceitasByIngredientes(List<IngredienteUtilizado> ingredientesUsuario) {
         List<Receita> retorno = new ArrayList<>();
-
         ingredientesUsuario.forEach(ingredienteUtilizado -> retorno.addAll(repository.findAllByIngredientesUtilizados_Ingrediente__id(ingredienteUtilizado.getIngrediente().get_id())));
         return retorno.stream()
                 .distinct()
-                .map(receita -> new ReceitaResponse(receita, ingredientesUsuario))
                 .collect(Collectors.toList());
     }
 }

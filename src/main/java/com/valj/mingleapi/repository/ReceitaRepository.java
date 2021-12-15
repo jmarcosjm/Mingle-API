@@ -11,5 +11,12 @@ import java.util.List;
 @Repository
 public interface ReceitaRepository extends MongoRepository<Receita, String> {
     Receita getReceitaBy_id(String _id);
+
     List<Receita> findAllByIngredientesUtilizados_Ingrediente__id(String _id);
+
+    List<Receita> findByNomeContainingIgnoreCase(String nome);
+
+    List<Receita> findAllByIngredientesUtilizados_Ingrediente_nomeIgnoreCase(String _id);
+
+    List<Receita> findAllBy_idCriador(String idUsuario);
 }

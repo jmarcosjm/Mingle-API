@@ -1,5 +1,6 @@
 package com.valj.mingleapi.rest;
 
+import com.valj.mingleapi.model.document.Ingrediente;
 import com.valj.mingleapi.model.document.IngredienteCadastrado;
 import com.valj.mingleapi.service.IngredienteCadastradoService;
 import com.valj.mingleapi.service.IngredienteService;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -21,22 +23,24 @@ public class IngredienteCadastradoRest {
     @PostMapping
     public ResponseEntity<IngredienteCadastrado> adicionar(@RequestBody IngredienteCadastrado ingredienteCadastrado) {
         try {
+            if(ingredienteCadastrado.getIngredienteUtilizado().getIngrediente() == null || ingredienteCadastrado.getIngredienteUtilizado().getIngrediente().getNome() == null)
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ingrediente não especificado");
             var ingrediente = ingredienteCadastrado
                     .getIngredienteUtilizado()
                     .getIngrediente();
-
-            if (ingredienteService.findByNome(ingrediente.getNome()).isEmpty()) {
-                ingrediente.setNome(ingrediente.getNome().toUpperCase());
+            ingrediente.setNome(ingrediente.getNome().toUpperCase());
+            Optional<Ingrediente> optionalIngrediente = ingredienteService.findByNome(ingrediente.getNome());
+            if (optionalIngrediente.isEmpty()) {
                 ingredienteCadastrado.getIngredienteUtilizado().setIngrediente(ingredienteService.adicionar(ingrediente));
             } else {
                 ingredienteCadastrado.getIngredienteUtilizado()
-                        .setIngrediente(ingredienteService
-                                .findByNome(ingrediente.getNome())
-                                .orElse(ingrediente));
+                        .setIngrediente(optionalIngrediente.orElse(ingrediente));
             }
 
             return ResponseEntity.ok(service.adicionar(ingredienteCadastrado));
-        } catch (Exception e) {
+        }catch (ResponseStatusException e){
+            throw e;
+        }catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.ACCEPTED, "Ingrediente ja cadastrado", e);
         }
     }
@@ -44,5 +48,11 @@ public class IngredienteCadastradoRest {
     @GetMapping(value = "/{idUsuario}")
     public ResponseEntity<List<IngredienteCadastrado>> getAll(@PathVariable("idUsuario") String idUsuario) {
         return ResponseEntity.ok(service.getAll(idUsuario));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAll() {
+        service.deleteAll();
+        return ResponseEntity.ok().build();
     }
 }
