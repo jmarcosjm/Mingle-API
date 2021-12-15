@@ -20,5 +20,7 @@ public class IngredienteCadastradoService {
     public IngredienteCadastrado getByIdUsuarioReceita(String _id){
         return repository.findBy_id(_id);
     }
-
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 }
