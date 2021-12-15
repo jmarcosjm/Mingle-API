@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -40,15 +41,18 @@ public class ReceitaService {
         return repository.findAllBy_idCriador(idUsuario);
     }
 
-    public List<Receita> getReceitaByIngrediente(IngredienteUtilizado ingredienteBusca, List<IngredienteUtilizado> ingredientesUsuario) {
-        return repository.findAllByIngredientesUtilizados_Ingrediente__id(ingredienteBusca.getIngrediente().get_id());
+    public List<Receita> getReceitaByIngrediente(IngredienteUtilizado ingredienteBusca) {
+        List<Receita> retorno = new ArrayList<>(repository.findAllByIngredientesUtilizados_Ingrediente__id(ingredienteBusca.getIngrediente().get_id()));
+        return retorno.stream()
+                .distinct()
+                .collect(Collectors.toList());
     }
-
 
     public List<Receita> getReceitasByIngredientes(List<IngredienteUtilizado> ingredientesUsuario) {
         List<Receita> retorno = new ArrayList<>();
-
-        ingredientesUsuario.forEach(ingredienteUtilizado -> retorno.addAll(repository.findAllByIngredientesUtilizados_Ingrediente_nomeIgnoreCase(ingredienteUtilizado.getIngrediente().getNome())));
-        return retorno;
+        ingredientesUsuario.forEach(ingredienteUtilizado -> retorno.addAll(repository.findAllByIngredientesUtilizados_Ingrediente__id(ingredienteUtilizado.getIngrediente().get_id())));
+        return retorno.stream()
+                .distinct()
+                .collect(Collectors.toList());
     }
 }
