@@ -16,7 +16,7 @@ public interface ReceitaRepository extends MongoRepository<Receita, String> {
 
     List<Receita> findByNomeContainingIgnoreCase(String nome);
 
-    List<Receita> findAllByIngredientesUtilizados_Ingrediente_nomeIgnoreCase(String _id);
+    List<Receita> findAllByIngredientesUtilizados_Ingrediente_nomeIgnoreCase(String nome);
 
     List<Receita> findAllBy_idCriador(String idUsuario);
 }

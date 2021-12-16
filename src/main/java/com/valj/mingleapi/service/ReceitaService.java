@@ -48,9 +48,9 @@ public class ReceitaService {
                 .collect(Collectors.toList());
     }
 
-    public List<Receita> getReceitasByIngredientes(List<IngredienteUtilizado> ingredientesUsuario) {
+    public List<Receita> getReceitasByIngredientes(List<IngredienteUtilizado> ingredientes) {
         List<Receita> retorno = new ArrayList<>();
-        ingredientesUsuario.forEach(ingredienteUtilizado -> retorno.addAll(repository.findAllByIngredientesUtilizados_Ingrediente__id(ingredienteUtilizado.getIngrediente().get_id())));
+        ingredientes.forEach(ingredienteUtilizado -> retorno.addAll(repository.findAllByIngredientesUtilizados_Ingrediente_nomeIgnoreCase(ingredienteUtilizado.getIngrediente().getNome())));
         return retorno.stream()
                 .distinct()
                 .collect(Collectors.toList());
