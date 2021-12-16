@@ -43,15 +43,6 @@ public class IngredienteRest {
         return optionalIngrediente.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.ok(service.adicionar(ingrediente)));
     }
 
-    @PostMapping(value = "/cadastrar")
-    public ResponseEntity<IngredienteCadastrado> cadastrarIngrediente(@RequestBody IngredienteCadastrado ingredienteCadastrado) {
-        var ingredienteRecebido = ingredienteCadastrado.getIngredienteUtilizado().getIngrediente();
-        var ingrediente = service.findByNome(ingredienteRecebido.getNome()).orElse(service.adicionar(ingredienteRecebido));
-
-        ingredienteCadastrado.getIngredienteUtilizado().setIngrediente(ingrediente);
-        return ResponseEntity.ok(ingredienteCadastradoService.adicionar(ingredienteCadastrado));
-    }
-
     @GetMapping(value = "/cadastrar/{user}")
     public ResponseEntity<List<IngredienteCadastrado>> ingredientesCadastrados(@PathVariable("user") String user) {
         return ResponseEntity.ok(ingredienteCadastradoService.getAll(user));

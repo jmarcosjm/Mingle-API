@@ -25,7 +25,7 @@ public class IngredienteCadastradoRest {
     @PostMapping
     public ResponseEntity<IngredienteCadastrado> adicionar(@RequestBody IngredienteCadastrado ingredienteCadastrado) {
         try {
-            if(ingredienteCadastrado.getIngredienteUtilizado().getIngrediente() == null || ingredienteCadastrado.getIngredienteUtilizado().getIngrediente().getNome() == null)
+            if (ingredienteCadastrado.getIngredienteUtilizado().getIngrediente() == null || ingredienteCadastrado.getIngredienteUtilizado().getIngrediente().getNome() == null)
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ingrediente não especificado");
             var ingrediente = ingredienteCadastrado
                     .getIngredienteUtilizado()
@@ -40,9 +40,9 @@ public class IngredienteCadastradoRest {
             }
 
             return ResponseEntity.ok(service.adicionar(ingredienteCadastrado));
-        }catch (ResponseStatusException e){
+        } catch (ResponseStatusException e) {
             throw e;
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.ACCEPTED, "Ingrediente ja cadastrado", e);
         }
     }
@@ -51,6 +51,15 @@ public class IngredienteCadastradoRest {
     public ResponseEntity<List<IngredienteUtilizado>> getAll(@PathVariable("idUsuario") String idUsuario) {
         return ResponseEntity.ok(service.getAll(idUsuario).stream()
                 .map(IngredienteCadastrado::getIngredienteUtilizado)
+                .collect(Collectors.toList()));
+    }
+
+    @GetMapping(value = "/except/{idUsuario}")
+    public ResponseEntity<List<IngredienteUtilizado>> getAllNotFromUser(@PathVariable("idUsuario") String idUsuario) {
+        return ResponseEntity.ok(service.getAll().stream()
+                .filter(ingrediente -> !ingrediente.getIdUsuario().equalsIgnoreCase(idUsuario))
+                .map(IngredienteCadastrado::getIngredienteUtilizado)
+                .distinct()
                 .collect(Collectors.toList()));
     }
 

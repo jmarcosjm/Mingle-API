@@ -11,15 +11,27 @@ import java.util.List;
 @AllArgsConstructor
 public class IngredienteCadastradoService {
     private IngredienteCadastradoRepository repository;
-    public IngredienteCadastrado adicionar(IngredienteCadastrado ingredienteCadastrado){
+
+    public IngredienteCadastrado adicionar(IngredienteCadastrado ingredienteCadastrado) {
         return repository.insert(ingredienteCadastrado);
     }
-    public List<IngredienteCadastrado> getAll(String idUsuario){
+
+    public List<IngredienteCadastrado> getAll() {
+        return repository.findAll();
+    }
+
+    public List<IngredienteCadastrado> getAll(String idUsuario) {
         return repository.findAllByIdUsuario(idUsuario);
     }
-    public IngredienteCadastrado getByIdUsuario(String _id){
+
+    public List<IngredienteCadastrado> getAllNotFrom(String idUsuario) {
+        return repository.findAllByIdUsuarioNot(idUsuario);
+    }
+
+    public IngredienteCadastrado getByIdUsuario(String _id) {
         return repository.findBy_id(_id);
     }
+
     public void deleteAll() {
         repository.deleteAll();
     }
