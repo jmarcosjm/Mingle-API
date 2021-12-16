@@ -1,5 +1,6 @@
 package com.valj.mingleapi.rest;
 
+import com.valj.mingleapi.model.IngredienteUtilizado;
 import com.valj.mingleapi.model.document.Ingrediente;
 import com.valj.mingleapi.model.document.IngredienteCadastrado;
 import com.valj.mingleapi.service.IngredienteCadastradoService;
@@ -12,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
@@ -46,8 +48,10 @@ public class IngredienteCadastradoRest {
     }
 
     @GetMapping(value = "/{idUsuario}")
-    public ResponseEntity<List<IngredienteCadastrado>> getAll(@PathVariable("idUsuario") String idUsuario) {
-        return ResponseEntity.ok(service.getAll(idUsuario));
+    public ResponseEntity<List<IngredienteUtilizado>> getAll(@PathVariable("idUsuario") String idUsuario) {
+        return ResponseEntity.ok(service.getAll(idUsuario).stream()
+                .map(IngredienteCadastrado::getIngredienteUtilizado)
+                .collect(Collectors.toList()));
     }
 
     @DeleteMapping

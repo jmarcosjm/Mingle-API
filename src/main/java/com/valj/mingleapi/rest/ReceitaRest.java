@@ -12,7 +12,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -100,7 +99,7 @@ public class ReceitaRest {
 
     @GetMapping(path = "/ingrediente-cadastrado")
     ResponseEntity<List<Receita>> getReceitasPorIngredienteCadastrado(@RequestHeader String idIngredienteCadastrado) {
-        IngredienteCadastrado ingredienteCadastrado = ingredienteCadastradoService.getByIdUsuarioReceita(idIngredienteCadastrado);
+        IngredienteCadastrado ingredienteCadastrado = ingredienteCadastradoService.getByIdUsuario(idIngredienteCadastrado);
         return ResponseEntity.ok(service.getReceitaByIngrediente(ingredienteCadastrado.getIngredienteUtilizado()));
     }
 
